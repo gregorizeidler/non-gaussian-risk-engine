@@ -315,31 +315,45 @@ def viz2_stress_testing():
         years_evt = bs['evt']['years']
         underestimation = years_normal / years_evt if years_evt > 0 else np.inf
         
+        # Shorten scenario names for table
+        scenario_short = scenario.replace(' Financial', '').replace(' Inflation', '').replace('-style', '')
+        
         table_data.append([
-            scenario,
+            scenario_short,
             format_percent(crash_level, 0),
-            f"{years_evt:.0f}y",
-            f"{years_normal:.0f}y",
-            f"{underestimation:.0f}x"
+            f"{int(years_evt)}y" if years_evt < 1000 else f"{int(years_evt/1000)}k",
+            f"{int(years_normal)}y" if years_normal < 1e6 else f"{int(years_normal/1e6)}M",
+            f"{int(underestimation)}x" if underestimation < 1000 else f"{int(underestimation/1000)}k"
         ])
     
     table = ax.table(cellText=table_data,
                      colLabels=['Scenario', 'Loss', 'EVT', 'Normal', 'Error'],
                      cellLoc='center',
                      loc='center',
-                     bbox=[0, 0.2, 1, 0.7])
+                     bbox=[0, 0.15, 1, 0.75])
     table.auto_set_font_size(False)
-    table.set_fontsize(9)
-    table.scale(1, 2)
+    table.set_fontsize(11)  # Increased from 9
+    table.scale(1, 2.2)  # Increased cell height
     
     # Style header
     for i in range(5):
         table[(0, i)].set_facecolor('#4472C4')
-        table[(0, i)].set_text_props(weight='bold', color='white')
+        table[(0, i)].set_text_props(weight='bold', color='white', fontsize=12)
     
-    ax.text(0.5, 0.1, '⚠️ Normal Model underestimates crisis probability by orders of magnitude!',
-            ha='center', fontsize=10, fontweight='bold', color='darkred',
-            bbox=dict(boxstyle='round', facecolor='mistyrose', alpha=0.8))
+    # Color code the Error column
+    for i in range(1, len(table_data) + 1):
+        error_val = float(table_data[i-1][4].replace('x', '').replace('k', ''))
+        if 'k' in table_data[i-1][4]:
+            error_val *= 1000
+        
+        if error_val > 100:
+            table[(i, 4)].set_facecolor('#ffcccc')  # Light red for huge errors
+        elif error_val > 10:
+            table[(i, 4)].set_facecolor('#ffffcc')  # Light yellow
+    
+    ax.text(0.5, 0.05, '⚠️ Normal Model underestimates crisis probability by orders of magnitude!',
+            ha='center', fontsize=11, fontweight='bold', color='darkred',
+            bbox=dict(boxstyle='round', facecolor='mistyrose', alpha=0.9, pad=0.8))
     
     plt.tight_layout()
     plt.savefig('results/advanced/02_stress_testing.png', dpi=300, bbox_inches='tight')
