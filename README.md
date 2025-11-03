@@ -1228,12 +1228,12 @@ Confidence    Normal      Empirical   EVT         EVT vs Normal
 
 Black Swan Event Probabilities (Loss > threshold):
 
-Event         Normal      EVT         Ratio
----------     -------     -------     -----
--5% loss      1 in 13,032 1 in 253    51x more frequent
--7% loss      1 in 3.5M   1 in 1,261  2,777x more frequent
--10% loss     1 in 506B   1 in 3,087  164 million x!
--15% loss     "Impossible" 1 in 24,567 ∞
+Event         Normal Model         EVT Model       EVT is More Frequent
+---------     ------------------   -------------   --------------------
+-5% loss      1 in 13,032 days     1 in 253 days   51x
+-7% loss      1 in 3.5 million     1 in 1,261      2,777x
+-10% loss     1 in 506 billion     1 in 3,087      164,000,000x
+-15% loss     "Impossible"         1 in 24,567     ∞ (Infinite)
 
 Portfolio Impact ($1,000,000 portfolio):
 
